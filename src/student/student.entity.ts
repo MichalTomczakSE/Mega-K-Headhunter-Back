@@ -1,5 +1,6 @@
-import { BaseEntity, Column, Entity, PrimaryGeneratedColumn } from "typeorm";
+import { BaseEntity, Column, Entity, JoinColumn, OneToOne, PrimaryGeneratedColumn } from "typeorm";
 import { StudentEntity } from "../types/student/student-entity";
+import { StudentDegrees } from "./student-degrees.entity";
 
 @Entity()
 export class Student extends BaseEntity implements StudentEntity  {
@@ -114,4 +115,8 @@ export class Student extends BaseEntity implements StudentEntity  {
     status: number;
 
     //@TODO relation for HR worker
+
+    @OneToOne(() => StudentDegrees)
+    @JoinColumn()
+    degrees: StudentDegrees
 }
