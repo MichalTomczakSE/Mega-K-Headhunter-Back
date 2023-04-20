@@ -1,6 +1,7 @@
 import { BaseEntity, Column, Entity, JoinColumn, OneToOne, PrimaryGeneratedColumn } from "typeorm";
-import { StudentEntity } from "../types/student/student-entity";
+import { StudentEntity } from "../types";
 import { StudentDegrees } from "./student-degrees.entity";
+
 
 @Entity()
 export class Student extends BaseEntity implements StudentEntity  {

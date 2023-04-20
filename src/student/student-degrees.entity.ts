@@ -1,5 +1,5 @@
 import { BaseEntity, Column, Entity, PrimaryGeneratedColumn } from "typeorm";
-import { StudentDegreesEntity } from "../types/student/student-degrees-entity";
+import { StudentDegreesEntity } from "../types";
 
 @Entity()
 export class StudentDegrees extends BaseEntity implements StudentDegreesEntity{
