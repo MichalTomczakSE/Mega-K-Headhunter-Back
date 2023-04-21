@@ -34,5 +34,7 @@ lerna-debug.log*
 !.vscode/launch.json
 !.vscode/extensions.json
 
-# Config
-config.ts
+
+#Database connection
+.env
+DigiCertGlobalRootCA.crt.pem
