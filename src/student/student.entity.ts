@@ -11,7 +11,7 @@ export class Student extends BaseEntity implements StudentEntity  {
 
     @Column({
         unique: true,
-        length: 100
+        length: 100,
     })
     email: string;
 
