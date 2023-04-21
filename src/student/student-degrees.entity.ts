@@ -1,5 +1,5 @@
 import { BaseEntity, Column, Entity, PrimaryGeneratedColumn } from "typeorm";
-import { StudentDegreesEntity } from "../types";
+import { gradingScale, StudentDegreesEntity } from "../types";
 
 @Entity()
 export class StudentDegrees extends BaseEntity implements StudentDegreesEntity{
@@ -17,25 +17,25 @@ export class StudentDegrees extends BaseEntity implements StudentDegreesEntity{
         type: "tinyint",
         default: 0
     })
-    courseCompletion: 0 | 1 | 2 | 3 | 4 | 5;
+    courseCompletion: gradingScale;
 
     @Column({
         type: "tinyint",
         default: 0
     })
-    courseEngagement: 0 | 1 | 2 | 3 | 4 | 5;
+    courseEngagement: gradingScale;
 
     @Column({
         type: "tinyint",
         default: 0
     })
-    projectDegree: 0 | 1 | 2 | 3 | 4 | 5;
+    projectDegree: gradingScale;
 
     @Column({
         type: "tinyint",
         default: 0
     })
-    teamProjectDegree: 0 | 1 | 2 | 3 | 4 | 5;
+    teamProjectDegree: gradingScale;
 
     @Column({
         length: 90,
