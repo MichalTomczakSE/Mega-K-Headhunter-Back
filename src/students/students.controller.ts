@@ -9,15 +9,15 @@ export class StudentsController {
   ) {}
   @Get('/available-students')
   async getAvailableStudents(): Promise<Student[]> {
-    return await this.studentsService.getAvailableStudents();
+    return await this.studentsService.getStudents(1);
   }
   @Get('/awaiting-students')
   async getAwaitingStudents(): Promise<Student[]> {
-    return await this.studentsService.getAwaitingStudents();
+    return await this.studentsService.getStudents(2);
   }
   @Get('/hired-students')
   async getHiredStudents(): Promise<Student[]> {
-    return await this.studentsService.getHiredStudents();
+    return await this.studentsService.getStudents(3);
   }
   @Get('/available-students/:id')
   async getOneAvailableStudent(@Param('id') id: string): Promise<Student> {
