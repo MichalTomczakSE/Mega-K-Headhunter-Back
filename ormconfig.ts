@@ -9,10 +9,10 @@ export const ormConfig: TypeOrmModuleOptions = {
   username: process.env.MYSQL_USER,
   password: process.env.MYSQL_PASSWORD,
   database: process.env.MYSQL_DATABASE,
-  // ssl: {
-  //   rejectUnauthorized:true,
-  //   ca: serverCa,
-  // },
+  ssl: {
+    rejectUnauthorized:true,
+    ca: serverCa,
+  },
   entities: ['dist/**/**.entity{.ts,.js}'],
   bigNumberStrings: false,
   logging: true,

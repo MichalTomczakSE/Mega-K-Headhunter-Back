@@ -122,7 +122,7 @@ export class Student extends BaseEntity implements StudentEntity {
 
   //@TODO relation for HR worker
 
-  @OneToOne(() => StudentDegrees)
+  @OneToOne((type) => StudentDegrees)
   @JoinColumn()
   degrees: StudentDegrees;
 }
