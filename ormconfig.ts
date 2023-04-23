@@ -1,7 +1,6 @@
 import { TypeOrmModuleOptions } from '@nestjs/typeorm';
 import { readFileSync } from 'fs';
 const serverCa = [readFileSync("./DigiCertGlobalRootCA.crt.pem", "utf8")];
-console.log(process.env.MYSQL_HOST)
 export const ormConfig: TypeOrmModuleOptions = {
   type: 'mysql',
   host:  process.env.MYSQL_HOST,
