@@ -1,3 +1,5 @@
+import { StudentDegreesEntity } from "./student-degrees-entity";
+
 export enum StudentStatus {
   available = 1,
   awaiting = 2,
@@ -24,4 +26,19 @@ export interface StudentEntity {
   courses: string | null;
   isActive: boolean;
   status: StudentStatus;
+};
+
+
+
+export interface OneStudentResponse {
+  id: string,
+  githubUsername: string,
+  firstName: string,
+  lastName: string,
+  expectedTypeWork: number,
+  targetWorkCity: string | null,
+  expectedSalary: number | null,
+  canTakeApprenticeship: boolean,
+  workExperience: string | null,
+  degrees: StudentDegreesEntity
 }
