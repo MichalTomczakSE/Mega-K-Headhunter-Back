@@ -23,6 +23,7 @@ export class Student extends BaseEntity implements StudentEntity  {
 
     @Column({
         length: 30,
+        nullable: true
     })
     firstName: string;
 
@@ -74,6 +75,7 @@ export class Student extends BaseEntity implements StudentEntity  {
         type: 'decimal',
         precision: 7,
         scale: 2,
+        nullable: true,
     })
     expectedSalary: number | null;
 
