@@ -20,7 +20,7 @@ export class StudentService {
       },
     });
   }
-  async getOneAvailableStudents(id: string): Promise<OneStudentResponse> {
+  async getOneAvailableStudents(id: string): Promise<OneStudentResponse>{
     return await Student.findOne({
       select: {
         githubUsername: true,

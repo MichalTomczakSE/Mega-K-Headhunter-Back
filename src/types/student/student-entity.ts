@@ -40,5 +40,5 @@ export interface OneStudentResponse {
   expectedSalary: number | null,
   canTakeApprenticeship: boolean,
   workExperience: string | null,
-  degrees: StudentDegreesEntity
+  degrees: Omit<StudentDegreesEntity, "id" | "activationToken">
 }
