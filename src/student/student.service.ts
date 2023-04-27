@@ -1,10 +1,10 @@
-import { Injectable } from '@nestjs/common';
-import { Student } from './student.entity';
-import { OneStudentResponse } from "../types";
+import { Injectable } from "@nestjs/common";
+import { Student } from "./student.entity";
+import { GradingScale, OneStudentResponse } from "../types";
 
 @Injectable()
 export class StudentService {
-  async getStudents(status: number): Promise<Omit<OneStudentResponse, 'degrees'>[]> {
+  async getStudents(status: number): Promise<Omit<OneStudentResponse, "degrees">[]> {
     return await Student.find({
       select: {
         id: true,
@@ -14,32 +14,42 @@ export class StudentService {
         targetWorkCity: true,
         expectedSalary: true,
         canTakeApprenticeship: true,
-        workExperience: true,
-      },where: {
-        status,
-      },
+        workExperience: true
+      }, where: {
+        status
+      }
     });
   }
-  async getOneAvailableStudents(id: string): Promise<OneStudentResponse>{
+
+  async getOneAvailableStudents(id: string): Promise<OneStudentResponse> {
+
     return await Student.findOne({
-      select: {
-        githubUsername: true,
-        id: true,
-        firstName: true,
-        lastName: true,
-        expectedTypeWork: true,
-        targetWorkCity: true,
-        expectedSalary: true,
-        canTakeApprenticeship: true,
-        workExperience: true,
-      },
+      select:
+        {
+          githubUsername: true,
+          id: true,
+          firstName: true,
+          lastName: true,
+          expectedTypeWork: true,
+          targetWorkCity: true,
+          expectedSalary: true,
+          canTakeApprenticeship: true,
+          workExperience: true,
+          degrees: {
+            courseCompletion: true,
+            courseEngagement: true,
+            projectDegree: true,
+            teamProjectDegree: true,
+            bonusProjectUrls: true,
+          }
+        },
       relations: {
-        degrees: {},
+        degrees: {}
       },
       where: {
         status: 1,
-        id,
-      },
+        id
+      }
     });
   }
 }
