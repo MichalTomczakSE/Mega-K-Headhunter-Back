@@ -46,7 +46,6 @@ describe('StudentService', () => {
                 isActive: true,
                 status: 1,
                 degrees: {
-                    id: 'f9751776-9ed4-42c5-9e4a-930f9d8bc9ff',
                     courseCompletion: 5,
                     courseEngagement: 5,
                     projectDegree: 5,

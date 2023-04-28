@@ -5,6 +5,7 @@ import { UpdateStudentDetailsDto } from "./dto/update-student-details.dto";
 import { StudentDegrees } from "./student-degrees.entity";
 import { UpdateStudentDetailsResponse } from "../types/student/update-student-details-response";
 
+
 @Injectable()
 export class StudentService {
 
@@ -17,14 +18,18 @@ export class StudentService {
             relations: ['degrees'],
         })
         if ( student.degrees !== null ) {
-            delete student.degrees.activationToken;
+            const { activationToken, id, ...rest } = student.degrees;
+            (student as GetSingleStudentFullDetailsResponse).degrees = rest
         }
 
         return student;
     }
 
     async editStudentDetails(id: string, studentData: UpdateStudentDetailsDto): Promise<UpdateStudentDetailsResponse> {
-        const student = await this.getSingleStudentFullDetails(id);
+        const student = await Student.findOneOrFail({
+            where: { id },
+            relations: ['degrees']
+        });
 
         const partialStudentData = { ...studentData };
         delete partialStudentData.bonusProjectUrls;
@@ -38,6 +43,6 @@ export class StudentService {
 
         return {
             status: 'changed',
-        }
+        };
     }
 }
