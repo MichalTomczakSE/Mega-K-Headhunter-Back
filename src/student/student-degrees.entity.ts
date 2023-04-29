@@ -8,12 +8,6 @@ export class StudentDegrees extends BaseEntity implements StudentDegreesEntity{
     id: string
 
     @Column({
-        unique: true,
-        length: 100
-    })
-    email: string;
-
-    @Column({
         type: "tinyint",
         default: 0
     })
