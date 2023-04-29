@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { Student } from "./student.entity";
-import { GetSingleStudentFullDetailsResponse } from "../types";
+import { GetSingleStudentFullDetailsResponse, GradingScale, OneStudentResponse } from "../types";
 import { UpdateStudentDetailsDto } from "./dto/update-student-details.dto";
 import { StudentDegrees } from "./student-degrees.entity";
 import { UpdateStudentDetailsResponse } from "../types/student/update-student-details-response";
@@ -8,6 +8,55 @@ import { UpdateStudentDetailsResponse } from "../types/student/update-student-de
 
 @Injectable()
 export class StudentService {
+
+    async getStudents(status: number): Promise<Omit<OneStudentResponse, "degrees">[]> {
+        return await Student.find({
+          select: {
+            id: true,
+            firstName: true,
+            lastName: true,
+            expectedTypeWork: true,
+            targetWorkCity: true,
+            expectedSalary: true,
+            canTakeApprenticeship: true,
+            workExperience: true
+          }, where: {
+            status
+          }
+        });
+      }
+    
+    async getOneAvailableStudents(id: string): Promise<OneStudentResponse> {
+    
+        return await Student.findOne({
+          select:
+            {
+              githubUsername: true,
+              id: true,
+              firstName: true,
+              lastName: true,
+              expectedTypeWork: true,
+              targetWorkCity: true,
+              expectedSalary: true,
+              canTakeApprenticeship: true,
+              workExperience: true,
+              degrees: {
+                courseCompletion: true,
+                courseEngagement: true,
+                projectDegree: true,
+                teamProjectDegree: true,
+                bonusProjectUrls: true,
+              }
+            },
+          relations: {
+            degrees: {}
+          },
+          where: {
+            status: 1,
+            id
+          }
+        });
+      }
 
     async getSingleStudentFullDetails(id: string): Promise<GetSingleStudentFullDetailsResponse> {
         const student = await Student.findOneOrFail({
@@ -45,4 +94,5 @@ export class StudentService {
             status: 'changed',
         };
     }
+
 }
