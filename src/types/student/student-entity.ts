@@ -1,4 +1,5 @@
-import { StudentDegreesEntity } from "./student-degrees-entity";
+import { StudentDegreesEntity } from './student-degrees-entity';
+import { UserEntity } from '../user';
 
 export enum StudentStatus {
   available = 1,
@@ -26,19 +27,18 @@ export interface StudentEntity {
   courses: string | null;
   isActive: boolean;
   status: StudentStatus;
-};
-
-
+  user: UserEntity;
+}
 
 export interface OneStudentResponse {
-  id: string,
-  githubUsername: string,
-  firstName: string,
-  lastName: string,
-  expectedTypeWork: number,
-  targetWorkCity: string | null,
-  expectedSalary: number | null,
-  canTakeApprenticeship: boolean,
-  workExperience: string | null,
-  degrees: Omit<StudentDegreesEntity, "id" | "activationToken">
+  id: string;
+  githubUsername: string;
+  firstName: string;
+  lastName: string;
+  expectedTypeWork: number;
+  targetWorkCity: string | null;
+  expectedSalary: number | null;
+  canTakeApprenticeship: boolean;
+  workExperience: string | null;
+  degrees: Omit<StudentDegreesEntity, 'id' | 'activationToken'>;
 }

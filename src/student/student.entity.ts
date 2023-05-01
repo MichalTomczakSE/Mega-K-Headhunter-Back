@@ -8,6 +8,7 @@ import {
 } from 'typeorm';
 import { StudentEntity } from '../types';
 import { StudentDegrees } from './student-degrees.entity';
+import { User } from '../user/user.entity';
 
 @Entity()
 export class Student extends BaseEntity implements StudentEntity {
@@ -125,4 +126,7 @@ export class Student extends BaseEntity implements StudentEntity {
   @OneToOne((type) => StudentDegrees)
   @JoinColumn()
   degrees: StudentDegrees;
+
+  @JoinColumn({ name: 'email', referencedColumnName: 'email' })
+  user: User;
 }
