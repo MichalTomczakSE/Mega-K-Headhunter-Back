@@ -1,5 +1,5 @@
-import { BaseEntity, Column, Entity, OneToMany, PrimaryGeneratedColumn } from "typeorm";
-import { Student } from "../student/student.entity";
+import { BaseEntity, Column, Entity, OneToMany, PrimaryGeneratedColumn, } from 'typeorm';
+import { Student } from '../student/student.entity';
 
 @Entity()
 export class HR extends BaseEntity {
@@ -15,7 +15,7 @@ export class HR extends BaseEntity {
     @Column({
         length: 80,
     })
-    fullName: string
+    fullName: string;
 
     @Column({
         length: 163,
@@ -29,5 +29,5 @@ export class HR extends BaseEntity {
     maxReservedStudents: number;
 
     @OneToMany(() => Student, (student) => student.hr)
-    students: Student[]
+    students: Student[];
 }
