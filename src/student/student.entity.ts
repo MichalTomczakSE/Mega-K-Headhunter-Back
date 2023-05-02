@@ -1,13 +1,7 @@
-import {
-  BaseEntity,
-  Column,
-  Entity,
-  JoinColumn,
-  OneToOne,
-  PrimaryGeneratedColumn,
-} from 'typeorm';
+import { BaseEntity, Column, Entity, JoinColumn, ManyToOne, OneToOne, PrimaryGeneratedColumn, } from 'typeorm';
 import { StudentEntity } from '../types';
 import { StudentDegrees } from './student-degrees.entity';
+import { HR } from '../hr/hr.entity';
 
 @Entity()
 export class Student extends BaseEntity implements StudentEntity {
@@ -120,9 +114,17 @@ export class Student extends BaseEntity implements StudentEntity {
   })
   status: number;
 
-  //@TODO relation for HR worker
+  @Column({
+    type: 'date',
+    nullable: true,
+    default: null,
+  })
+  scheduledAt: Date | null;
 
   @OneToOne((type) => StudentDegrees)
   @JoinColumn()
   degrees: StudentDegrees;
+
+  @ManyToOne(() => HR, (hr) => hr.students)
+  hr: HR;
 }
