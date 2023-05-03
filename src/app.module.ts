@@ -7,9 +7,10 @@ import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { StudentModule } from './student/student.module';
 import { ormConfig } from '../ormconfig';
+import { UserModule } from './user/user.module';
 
 @Module({
-  imports: [TypeOrmModule.forRoot(ormConfig), StudentModule],
+  imports: [TypeOrmModule.forRoot(ormConfig), StudentModule, UserModule],
   controllers: [AppController],
   providers: [AppService],
 })

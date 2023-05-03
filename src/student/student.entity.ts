@@ -2,6 +2,7 @@ import { BaseEntity, Column, Entity, JoinColumn, ManyToOne, OneToOne, PrimaryGen
 import { StudentEntity } from '../types';
 import { StudentDegrees } from './student-degrees.entity';
 import { HR } from '../hr/hr.entity';
+import { User } from '../user/user.entity';
 
 @Entity()
 export class Student extends BaseEntity implements StudentEntity {
@@ -127,4 +128,8 @@ export class Student extends BaseEntity implements StudentEntity {
 
   @ManyToOne(() => HR, (hr) => hr.students)
   hr: HR;
-}
+  
+  @JoinColumn({ name: 'email', referencedColumnName: 'email' })
+  user: User;
+  }
+  
