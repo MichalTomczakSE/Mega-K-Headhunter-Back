@@ -29,16 +29,6 @@ export class StudentController {
     return await this.studentService.getStudents(StudentStatus.available);
   }
 
-  @Get('/awaiting-students')
-  async getAwaitingStudents(): Promise<Omit<OneStudentResponse, 'degrees'>[]> {
-    return await this.studentService.getStudents(StudentStatus.awaiting);
-  }
-
-  @Get('/hired-students')
-  async getHiredStudents(): Promise<Omit<OneStudentResponse, 'degrees'>[]> {
-    return await this.studentService.getStudents(StudentStatus.hired);
-  }
-
   @Get('/available-students/:id')
   async getOneAvailableStudent(
       @Param('id') id: string,

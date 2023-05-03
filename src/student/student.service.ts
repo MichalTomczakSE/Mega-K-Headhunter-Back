@@ -73,32 +73,33 @@ export class StudentService {
     if (student.degrees !== null) {
       const { activationToken, id, ...rest } = student.degrees;
       (student as GetSingleStudentFullDetailsResponse).degrees = rest;
+      return student;
     }
   }
-        async editStudentDetails(
-          id: string,
-          studentData: UpdateStudentDetailsDto,
-      ): Promise<UpdateStudentDetailsResponse> {
-          const student = await Student.findOneOrFail({
-            where: { id },
-            relations: ['degrees'],
-          });
-        if ( student.degrees !== null ) {
-          await StudentDegrees.update(student.degrees.id, {
-            bonusProjectUrls: studentData.bonusProjectUrls,
-          });
-        }
-        const partialStudentData = { ...studentData };
-        delete partialStudentData.bonusProjectUrls;
-        await Student.update(id, partialStudentData);
+  async editStudentDetails(
+    id: string,
+    studentData: UpdateStudentDetailsDto,
+  ): Promise<UpdateStudentDetailsResponse> {
+    const student = await Student.findOneOrFail({
+      where: { id },
+      relations: ['degrees'],
+    });
+    if ( student.degrees !== null ) {
+      await StudentDegrees.update(student.degrees.id, {
+        bonusProjectUrls: studentData.bonusProjectUrls,
+      });
+    }
+    const partialStudentData = { ...studentData };
+    delete partialStudentData.bonusProjectUrls;
+    await Student.update(id, partialStudentData);
 
-        if (student.degrees !== null) {
-          await StudentDegrees.update(student.degrees.id, {
-            bonusProjectUrls: studentData.bonusProjectUrls,
-          });
-        }
-          return student;
-        }
+    if (student.degrees !== null) {
+      await StudentDegrees.update(student.degrees.id, {
+        bonusProjectUrls: studentData.bonusProjectUrls,
+      });
+    }
+    return;
+  }
         async scheduleStudent(
           id: string,
           hrId: string,
