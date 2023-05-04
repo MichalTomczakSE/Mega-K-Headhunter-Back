@@ -8,9 +8,15 @@ import { AppService } from './app.service';
 import { StudentModule } from './student/student.module';
 import { ormConfig } from '../ormconfig';
 import { UserModule } from './user/user.module';
+import { AuthModule } from './auth/auth.module';
 
 @Module({
-  imports: [TypeOrmModule.forRoot(ormConfig), StudentModule, UserModule],
+  imports: [
+    TypeOrmModule.forRoot(ormConfig),
+    StudentModule,
+    UserModule,
+    AuthModule,
+  ],
   controllers: [AppController],
   providers: [AppService],
 })
