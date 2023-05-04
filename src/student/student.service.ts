@@ -70,12 +70,14 @@ export class StudentService {
       },
       relations: ['degrees'],
     });
-    if (student.degrees !== null) {
+    if ( student.degrees !== null ) {
       const { activationToken, id, ...rest } = student.degrees;
       (student as GetSingleStudentFullDetailsResponse).degrees = rest;
-      return student;
     }
+
+    return student;
   }
+
   async editStudentDetails(
       id: string,
       studentData: UpdateStudentDetailsDto,
