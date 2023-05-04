@@ -1,10 +1,6 @@
 import { BadRequestException, Injectable } from '@nestjs/common';
 import { Student } from './student.entity';
-import {
-  GetSingleStudentFullDetailsResponse,
-  OneStudentResponse,
-  StudentStatus,
-} from '../types';
+import { GetSingleStudentFullDetailsResponse, OneStudentResponse, StudentStatus, } from '../types';
 import { UpdateStudentDetailsDto } from './dto/update-student-details.dto';
 import { StudentDegrees } from './student-degrees.entity';
 import { UpdateStudentDetailsResponse } from '../types/student/update-student-details-response';
@@ -74,36 +70,38 @@ export class StudentService {
       },
       relations: ['degrees'],
     });
-    if (student.degrees !== null) {
+    if ( student.degrees !== null ) {
       const { activationToken, id, ...rest } = student.degrees;
       (student as GetSingleStudentFullDetailsResponse).degrees = rest;
-      return student;
     }
+
+    return student;
   }
+
   async editStudentDetails(
-    id: string,
-    studentData: UpdateStudentDetailsDto,
+      id: string,
+      studentData: UpdateStudentDetailsDto,
   ): Promise<UpdateStudentDetailsResponse> {
     const student = await Student.findOneOrFail({
       where: { id },
       relations: ['degrees'],
     });
-    if (student.degrees !== null) {
-      await StudentDegrees.update(student.degrees.id, {
-        bonusProjectUrls: studentData.bonusProjectUrls,
-      });
-    }
+
     const partialStudentData = { ...studentData };
     delete partialStudentData.bonusProjectUrls;
     await Student.update(id, partialStudentData);
 
-    if (student.degrees !== null) {
+    if ( student.degrees !== null ) {
       await StudentDegrees.update(student.degrees.id, {
         bonusProjectUrls: studentData.bonusProjectUrls,
       });
     }
-    return;
+
+    return {
+      status: 'changed',
+    };
   }
+
   async scheduleStudent(
     id: string,
     hrId: string,
