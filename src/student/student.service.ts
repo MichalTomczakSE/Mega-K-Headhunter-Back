@@ -5,7 +5,7 @@ import {
   OneStudentResponse,
   StudentListItem,
   StudentsListResponse,
-  StudentStatus,
+  StudentStatus
 } from '../types';
 import { UpdateStudentDetailsDto } from './dto/update-student-details.dto';
 import { StudentDegrees } from './student-degrees.entity';

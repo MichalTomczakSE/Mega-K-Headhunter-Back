@@ -18,7 +18,7 @@ import {
   ItemsPerSite,
   OneStudentResponse,
   StudentsListResponse,
-  StudentStatus,
+  StudentStatus
 } from '../types';
 import { UpdateStudentDetailsDto } from './dto/update-student-details.dto';
 import { UpdateStudentDetailsResponse } from '../types/student/update-student-details-response';
