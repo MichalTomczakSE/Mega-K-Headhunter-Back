@@ -1,12 +1,4 @@
-import {
-  BaseEntity,
-  Column,
-  Entity,
-  JoinColumn,
-  ManyToOne,
-  OneToOne,
-  PrimaryGeneratedColumn,
-} from 'typeorm';
+import { BaseEntity, Column, Entity, Index, JoinColumn, ManyToOne, OneToOne, PrimaryGeneratedColumn, } from 'typeorm';
 import { StudentEntity } from '../types';
 import { StudentDegrees } from './student-degrees.entity';
 import { HR } from '../hr/hr.entity';
@@ -67,6 +59,7 @@ export class Student extends BaseEntity implements StudentEntity {
   })
   expectedTypeWork: number;
 
+  @Index()
   @Column({
     nullable: true,
     length: 41,
