@@ -1,33 +1,66 @@
 import { BadRequestException, Injectable } from '@nestjs/common';
 import { Student } from './student.entity';
-import { GetSingleStudentFullDetailsResponse, OneStudentResponse, StudentStatus, } from '../types';
+import {
+  GetSingleStudentFullDetailsResponse,
+  OneStudentResponse,
+  StudentListItem,
+  StudentsListResponse,
+  StudentStatus
+} from '../types';
 import { UpdateStudentDetailsDto } from './dto/update-student-details.dto';
 import { StudentDegrees } from './student-degrees.entity';
 import { UpdateStudentDetailsResponse } from '../types/student/update-student-details-response';
 import { HR } from '../hr/hr.entity';
 import * as moment from 'moment';
 import { ChangeStudentStatusResponse } from '../types/student/change-student-status-response';
+import { IsNull, Like } from 'typeorm';
 
 @Injectable()
 export class StudentService {
   async getStudents(
-    status: number,
-  ): Promise<Omit<OneStudentResponse, 'degrees'>[]> {
-    return await Student.find({
-      select: {
-        id: true,
-        firstName: true,
-        lastName: true,
-        expectedTypeWork: true,
-        targetWorkCity: true,
-        expectedSalary: true,
-        canTakeApprenticeship: true,
-        workExperience: true,
+      status: number,
+      itemsPerSite: number,
+      pageNo: number,
+      city: string,
+  ): Promise<StudentsListResponse> {
+    const [students, count] = (await Student.findAndCount({
+      select: ['id', 'firstName', 'lastName', 'githubUsername', 'scheduledAt'],
+      where: [
+        {
+          status,
+          isActive: true,
+          targetWorkCity: Like(`%${String(city)}%`),
+        },
+        city === ''
+            ? {
+              status,
+              isActive: true,
+              targetWorkCity: IsNull(),
+            }
+            : null,
+      ],
+      skip: itemsPerSite * (pageNo - 1),
+      take: itemsPerSite,
+      order: {
+        scheduledAt: 'ASC',
       },
-      where: {
-        status,
-      },
-    });
+    })) as [StudentListItem[], number];
+    const totalPages = Math.ceil(count / itemsPerSite);
+
+    const censoredStudentsData = students.map(
+        ({ githubUsername, scheduledAt, lastName, ...rest }) => {
+          return {
+            ...rest,
+            lastName: `${lastName[0]}.`,
+          };
+        },
+    );
+
+    return {
+      students:
+          status === StudentStatus.available ? censoredStudentsData : students,
+      totalPages,
+    };
   }
 
   async getOneAvailableStudents(id: string): Promise<OneStudentResponse> {
