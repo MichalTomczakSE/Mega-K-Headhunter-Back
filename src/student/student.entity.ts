@@ -106,11 +106,13 @@ export class Student extends BaseEntity implements StudentEntity {
   })
   courses: string | null;
 
+  @Index()
   @Column({
     default: false,
   })
   isActive: boolean;
 
+  @Index()
   @Column({
     type: 'tinyint',
   })
