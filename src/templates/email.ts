@@ -1,0 +1,2 @@
+export const hireStudentMessage = (student) =>
+    `<p>Kursant <strong>${student.firstName} ${student.lastName}</strong> (${student.id}) został zatrudniony przez użytkownika ${student.hr.fullName} (${student.hr.hrId}) z firmy <strong>${student.hr.company}</strong>.</p>`;
