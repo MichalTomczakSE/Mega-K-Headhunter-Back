@@ -42,7 +42,6 @@ export class StudentController {
       @Query('pageNo', new DefaultValuePipe(1), ParseIntPipe) pageNO: number,
       @Query('city', new DefaultValuePipe('')) city: string,
   ): Promise<StudentsListResponse> {
-    console.log(itemsPerSite);
     return await this.studentService.getStudents(
         StudentStatus.available,
         itemsPerSite,
