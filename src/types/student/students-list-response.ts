@@ -1,4 +1,4 @@
-export interface StudentListItem {
+export class StudentListItem {
     id: string;
     firstName: string;
     lastName: string;
@@ -6,7 +6,7 @@ export interface StudentListItem {
     scheduledAt?: Date;
 }
 
-export interface StudentsListResponse {
+export class StudentsListResponse {
     students: StudentListItem[];
     totalPages: number;
 }

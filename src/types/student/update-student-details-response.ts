@@ -1,3 +1,3 @@
-export interface UpdateStudentDetailsResponse {
+export class UpdateStudentDetailsResponse {
   status: string;
 }

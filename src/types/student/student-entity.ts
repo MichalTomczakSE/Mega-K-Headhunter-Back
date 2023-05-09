@@ -6,7 +6,7 @@ export enum StudentStatus {
   awaiting = 2,
   hired = 3,
 }
-export interface StudentEntity {
+export class StudentEntity {
   id: string;
   email: string;
   phoneNumber: string | null;
@@ -30,7 +30,7 @@ export interface StudentEntity {
   user: UserEntity;
 }
 
-export interface OneStudentResponse {
+export class OneStudentResponse {
   id: string;
   githubUsername: string;
   firstName: string;
