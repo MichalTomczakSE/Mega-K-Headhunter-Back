@@ -25,12 +25,14 @@ import { UpdateStudentDetailsResponse } from '../types/student/update-student-de
 import { CheckUniquePropertiesGuard } from '../guards/check-unique-properties.guard';
 import { ChangeStudentStatusResponse } from '../types/student/change-student-status-response';
 import { CheckScheduledStudentsLimitGuard } from '../guards/check-scheduled-students-limit.guard';
-
+import {ApiAcceptedResponse, ApiBadRequestResponse, ApiCreatedResponse, ApiOkResponse, ApiTags} from "@nestjs/swagger";
+@ApiTags('Student')
 @Controller('student')
 export class StudentController {
   constructor(@Inject(StudentService) private studentService: StudentService) {}
 
   @Get('/available-students')
+  @ApiOkResponse({ description: 'List of available students', type: StudentsListResponse,})
   async getAvailableStudents(
       @Query(
           'itemsPerSite',
@@ -51,6 +53,7 @@ export class StudentController {
   }
 
   @Get('/available-students/:id')
+  @ApiOkResponse({ description: 'One avaiable student', type: OneStudentResponse,})
   async getOneAvailableStudent(
     @Param('id') id: string,
   ): Promise<OneStudentResponse> {
@@ -58,6 +61,10 @@ export class StudentController {
   }
 
   @Put('/schedule/:studentId')
+  @ApiCreatedResponse({ description: 'Schedule student by Id' })
+  @ApiBadRequestResponse({
+    description: 'Only available student may be scheduled',
+  })
   @UseGuards(CheckScheduledStudentsLimitGuard)
   async scheduleStudent(
     @Param('studentId', ParseUUIDPipe) studentId: string,
@@ -67,6 +74,10 @@ export class StudentController {
   }
 
   @Put('/reject/:studentId')
+  @ApiCreatedResponse({ description: 'Reject student by Id',})
+  @ApiBadRequestResponse({
+    description: 'Only a scheduled student may be rejected',
+  })
   async rejectStudent(
       @Param('studentId', ParseUUIDPipe) studentId: string,
   ): Promise<ChangeStudentStatusResponse> {
@@ -74,6 +85,7 @@ export class StudentController {
   }
 
   @Get('/awaiting-students')
+  @ApiOkResponse({ description: 'Awaiting students list' })
   async getAwaitingStudents(
       @Query(
           'itemsPerSite',
