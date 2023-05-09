@@ -1,4 +1,4 @@
-import { BadRequestException, Injectable } from '@nestjs/common';
+import { BadRequestException, Inject, Injectable } from '@nestjs/common';
 import { Student } from './student.entity';
 import {
   GetSingleStudentFullDetailsResponse,
@@ -14,9 +14,14 @@ import { HR } from '../hr/hr.entity';
 import * as moment from 'moment';
 import { ChangeStudentStatusResponse } from '../types/student/change-student-status-response';
 import { IsNull, Like } from 'typeorm';
+import { EmailService } from "../email/email.service";
+import { hireStudentMessage } from "../templates/email";
 
 @Injectable()
 export class StudentService {
+  constructor(@Inject(EmailService) private emailService: EmailService) {
+  }
+
   async getStudents(
       status: number,
       itemsPerSite: number,
@@ -196,7 +201,7 @@ export class StudentService {
     student.scheduledAt = null;
     await student.save();
 
-    //@TODO sending email to admin when student was hired
+    await this.emailService.sendMail(process.env.ADMIN_EMAIL_ADDRESS, `Zatrudniono nowego kursanta [${student.id}]`, hireStudentMessage(student))
 
     return {
       status: 'changed',
