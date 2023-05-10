@@ -3,7 +3,7 @@ export enum UserRole {
   hr = 2,
   student = 3,
 }
-export interface UserEntity {
+export class UserEntity {
   id: string;
   email?: string;
   password: string;
