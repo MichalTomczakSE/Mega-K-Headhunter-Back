@@ -7,10 +7,7 @@ export type User = any;
 
 @Injectable()
 export class UserService {
-
-
   async findOne(username: string): Promise<User> {
-
     return await User.findOne({
       where: { email: username },
       select: {
