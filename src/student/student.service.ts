@@ -1,4 +1,4 @@
-import { BadRequestException, Inject, Injectable } from '@nestjs/common';
+import { BadRequestException, Inject, Injectable, NotFoundException } from '@nestjs/common';
 import { Student } from './student.entity';
 import {
   GetSingleStudentFullDetailsResponse,
@@ -14,8 +14,8 @@ import { HR } from '../hr/hr.entity';
 import * as moment from 'moment';
 import { ChangeStudentStatusResponse } from '../types/student/change-student-status-response';
 import { IsNull, Like } from 'typeorm';
-import { EmailService } from "../email/email.service";
-import { hireStudentMessage } from "../templates/email";
+import { EmailService } from '../email/email.service';
+import { hireStudentMessage } from '../templates/email';
 
 @Injectable()
 export class StudentService {
@@ -101,15 +101,17 @@ export class StudentService {
   async getSingleStudentFullDetails(
     id: string,
   ): Promise<GetSingleStudentFullDetailsResponse> {
-    const student = await Student.findOneOrFail({
+    const student = await Student.findOne({
       where: {
         isActive: true,
         id,
       },
       relations: ['degrees'],
     });
-    if ( student.degrees !== null ) {
-      const { activationToken, id, ...rest } = student.degrees;
+    if ( !student ) {
+      throw new NotFoundException(`Student ${id} does not exist`);
+    } else if ( student.degrees !== null ) {
+      const { activationToken, id: studentId, ...rest } = student.degrees;
       (student as GetSingleStudentFullDetailsResponse).degrees = rest;
     }
 
