@@ -1,7 +1,7 @@
-import {ApiProperty} from "@nestjs/swagger";
-import {StudentDegreesEntity} from './student-degrees-entity';
-import {UserEntity} from '../user';
-import {StudentListItem} from "./students-list-response";
+import { ApiProperty } from '@nestjs/swagger';
+import { StudentDegreesEntity } from './student-degrees-entity';
+import { UserEntity } from '../user';
+import { StudentListItem } from './students-list-response';
 
 export enum StudentStatus {
   available = 1,
@@ -123,7 +123,15 @@ export class StudentEntity {
   @ApiProperty({
     description: 'User Entity',
     type: [UserEntity],
-    example: [{id: 2, email: 'jankowalski@test.test', lastName: 'Kowalski', role: 'UserRole', currentToken: 'sdsfdwerfcvx54645c41xdasdasd'}],
+    example: [
+      {
+        id: 2,
+        email: 'jankowalski@test.test',
+        lastName: 'Kowalski',
+        role: 'UserRole',
+        currentToken: 'sdsfdwerfcvx54645c41xdasdasd',
+      },
+    ],
   })
   user: UserEntity;
 }
@@ -180,7 +188,16 @@ export class OneStudentResponse {
   @ApiProperty({
     description: 'Degrees',
     type: [StudentListItem],
-    example: [{ email: 'jankowalski@test.test', courseCompletion: 5, courseEngagement: 3, projectDegree: 1, teamProjectDegree: 2, bonusProjectUrls: 'https://Loremipsum/dolor/sit/amet'}],
+    example: [
+      {
+        email: 'jankowalski@test.test',
+        courseCompletion: 5,
+        courseEngagement: 3,
+        projectDegree: 1,
+        teamProjectDegree: 2,
+        bonusProjectUrls: 'https://Loremipsum/dolor/sit/amet',
+      },
+    ],
   })
   degrees: Omit<StudentDegreesEntity, 'id' | 'activationToken'>;
 }
