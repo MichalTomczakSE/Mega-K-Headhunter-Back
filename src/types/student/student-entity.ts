@@ -115,24 +115,7 @@ export class StudentEntity {
     example: true,
   })
   isActive: boolean;
-  @ApiProperty({
-    description: 'Status',
-    example: 'available',
-  })
   status: StudentStatus;
-  @ApiProperty({
-    description: 'User Entity',
-    type: [UserEntity],
-    example: [
-      {
-        id: 2,
-        email: 'jankowalski@test.test',
-        lastName: 'Kowalski',
-        role: 'UserRole',
-        currentToken: 'sdsfdwerfcvx54645c41xdasdasd',
-      },
-    ],
-  })
   user: UserEntity;
 }
 
@@ -181,7 +164,7 @@ export class OneStudentResponse {
   canTakeApprenticeship: boolean;
   @ApiProperty({
     description: 'Professional experience',
-    example: null,
+    example: 'Space to describe the experience',
     nullable: true,
   })
   workExperience: string | null;
@@ -190,7 +173,6 @@ export class OneStudentResponse {
     type: [StudentListItem],
     example: [
       {
-        email: 'jankowalski@test.test',
         courseCompletion: 5,
         courseEngagement: 3,
         projectDegree: 1,

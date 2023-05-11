@@ -85,7 +85,8 @@ export class StudentController {
   }
 
   @Put('/reject/:studentId')
-  @ApiCreatedResponse({ description: 'Reject student by Id', type:UpdateStudentDetailsResponse })
+  @ApiOkResponse({ description: 'Reject student by Id', type:UpdateStudentDetailsResponse  })
+  @ApiOkResponse({ status: 200, description: 'OK' })
   @ApiBadRequestResponse({
     description: 'Only a scheduled student may be rejected',
   })
@@ -149,7 +150,7 @@ export class StudentController {
   }
 
   @Get('/:id')
-  @ApiCreatedResponse({ description: 'List of available students', type: GetSingleStudentFullDetailsResponse })
+  @ApiOkResponse({ description: 'Single student', type: Student })
   getSingleStudentFullDetails(
     @Param('id') id: string,
   ): Promise<GetSingleStudentFullDetailsResponse> {

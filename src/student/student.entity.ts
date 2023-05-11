@@ -1,9 +1,18 @@
-import { BaseEntity, Column, Entity, Index, JoinColumn, ManyToOne, OneToOne, PrimaryGeneratedColumn, } from 'typeorm';
-import { StudentEntity } from '../types';
+import {
+  BaseEntity,
+  Column,
+  Entity,
+  Index,
+  JoinColumn,
+  ManyToOne,
+  OneToOne,
+  PrimaryGeneratedColumn,
+} from 'typeorm';
+import { StudentEntity, StudentListItem } from '../types';
 import { StudentDegrees } from './student-degrees.entity';
 import { HR } from '../hr/hr.entity';
 import { User } from '../user/user.entity';
-import {ApiProperty} from "@nestjs/swagger";
+import { ApiProperty } from '@nestjs/swagger';
 
 @Entity()
 export class Student extends BaseEntity implements StudentEntity {
@@ -64,7 +73,7 @@ export class Student extends BaseEntity implements StudentEntity {
 
   @ApiProperty({
     description: 'Portfolio urls of the Student',
-    example: ['https://Loremipsum/dolor/sit/amet'],
+    example: 'https://Loremipsum/dolor/sit/amet',
   })
   @Column({
     length: 2000,
@@ -74,9 +83,8 @@ export class Student extends BaseEntity implements StudentEntity {
 
   @ApiProperty({
     description: 'Projects urls of the Student',
-    example: [
+    example:
       'https://github.com/Ami777/MegaKursTest/pulls?q=is%3Apr+reviewed-by%3AAmi777',
-    ],
   })
   @Column({
     length: 500,
@@ -192,7 +200,6 @@ export class Student extends BaseEntity implements StudentEntity {
   })
   isActive: boolean;
 
-
   @Index()
   @Column({
     type: 'tinyint',
@@ -200,7 +207,7 @@ export class Student extends BaseEntity implements StudentEntity {
   status: number;
 
   @ApiProperty({
-    description: 'Shedule at',
+    description: 'Schedule at',
     example: '2022-01-01',
   })
   @Column({
@@ -210,6 +217,20 @@ export class Student extends BaseEntity implements StudentEntity {
   })
   scheduledAt: Date | null;
 
+  @ApiProperty({
+    description: 'Degrees',
+    type: [StudentListItem],
+    example: [
+      {
+        email: 'jan.kowalski@example.com',
+        courseCompletion: 5,
+        courseEngagement: 3,
+        projectDegree: 1,
+        teamProjectDegree: 2,
+        bonusProjectUrls: 'https://Loremipsum/dolor/sit/amet',
+      },
+    ],
+  })
   @OneToOne((type) => StudentDegrees)
   @JoinColumn()
   degrees: StudentDegrees;
