@@ -20,7 +20,7 @@ export class StudentsListResponse {
         lastName: 'Kowalski',
         githubUsername: 'Kowal',
         scheduledAt: new Date(),
-      },
+      }],
   })
     students: StudentListItem[];
     @ApiProperty({
