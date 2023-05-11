@@ -23,6 +23,7 @@ export class UpdateStudentDetailsDto {
   @ApiProperty({
     description: 'The phone number of the Student',
     example: '666666666',
+    nullable: true,
   })
   @IsPhoneNumber('PL')
   @ValidateIf((object, value) => value !== null)
@@ -58,6 +59,7 @@ export class UpdateStudentDetailsDto {
   @ApiProperty({
     description: 'Portfolio urls of the Student',
     example: ['https://Loremipsum/dolor/sit/amet'],
+    nullable: true,
   })
   @IsString()
   @ValidateIf((object, value) => value !== null)
@@ -68,6 +70,7 @@ export class UpdateStudentDetailsDto {
     example: [
       'https://github.com/Ami777/MegaKursTest/pulls?q=is%3Apr+reviewed-by%3AAmi777',
     ],
+    nullable: true,
   })
   @IsString()
   @ValidateIf((object, value) => value !== null)
@@ -77,6 +80,7 @@ export class UpdateStudentDetailsDto {
     description: 'Bio of the Student',
     example:
       'Jan Kowalski is a highly skilled programmer with over 1 year of experience in software development.',
+    nullable: true,
   })
   @IsString()
   @ValidateIf((object, value) => value !== null)
@@ -94,6 +98,7 @@ export class UpdateStudentDetailsDto {
   @ApiProperty({
     description: 'Destination city of work',
     example: 'Gdynia',
+    nullable: true,
   })
   @IsString()
   @MaxLength(41)
@@ -112,6 +117,7 @@ export class UpdateStudentDetailsDto {
   @ApiProperty({
     description: 'Expected salary monthly net',
     example: 1000,
+    nullable: true,
   })
   @IsNumber({
     maxDecimalPlaces: 2,
@@ -136,6 +142,7 @@ export class UpdateStudentDetailsDto {
   @ApiProperty({
     description: 'Education',
     example: 'Szkoła Wyższa Informatyki',
+    nullable: true,
   })
   @IsString()
   @ValidateIf((object, value) => value !== null)
@@ -143,7 +150,8 @@ export class UpdateStudentDetailsDto {
 
   @ApiProperty({
     description: 'Professional experience',
-    example: null,
+    example: 'Company IT',
+    nullable: true,
   })
   @IsString()
   @ValidateIf((object, value) => value !== null)
@@ -152,6 +160,7 @@ export class UpdateStudentDetailsDto {
   @ApiProperty({
     description: 'Courses',
     example: 'MegaK',
+    nullable: true,
   })
   @IsString()
   @ValidateIf((object, value) => value !== null)
@@ -161,6 +170,7 @@ export class UpdateStudentDetailsDto {
     description: 'Bonus project urls',
     example:
       'https://github.com/Ami777/MegaKursTest/commits?author=Ami777, https://github.com/Ami777/MegaKursTest/pulls?q=is%3Apr+reviewed-by%3AAmi777',
+    nullable: true,
   })
   @IsString()
   @ValidateIf((object, value) => value !== null)
