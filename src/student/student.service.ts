@@ -76,6 +76,8 @@ export class StudentService {
         firstName: true,
         lastName: true,
         expectedTypeWork: true,
+        expectedContractType: true,
+        monthsOfCommercialExp: true,
         targetWorkCity: true,
         expectedSalary: true,
         canTakeApprenticeship: true,

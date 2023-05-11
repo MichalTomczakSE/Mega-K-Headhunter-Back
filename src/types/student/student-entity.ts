@@ -40,5 +40,7 @@ export interface OneStudentResponse {
   expectedSalary: number | null;
   canTakeApprenticeship: boolean;
   workExperience: string | null;
+  expectedContractType: number;
+  monthsOfCommercialExp: number;
   degrees: Omit<StudentDegreesEntity, 'id' | 'activationToken'>;
 }
