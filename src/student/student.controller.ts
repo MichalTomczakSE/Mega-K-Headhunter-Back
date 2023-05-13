@@ -120,6 +120,20 @@ export class StudentController {
     return this.studentService.hireStudent(studentId);
   }
 
+
+
+  @Get("/scheduleStudents")
+  async getScheduleStudents(@Body('hrId') hrId: string,
+                      @Query(
+                        'itemsPerSite',
+                        new DefaultValuePipe(10),
+                        ParseIntPipe,
+                        new ParseEnumPipe(ItemsPerSite),
+                      )
+                        itemsPerSite: ItemsPerSite,
+                      @Query('pageNo', new DefaultValuePipe(1), ParseIntPipe) pageNO: number,): Promise<StudentsListResponse>{
+    return this.studentService.getScheduleStudents(hrId,itemsPerSite,pageNO)
+  }
   @Get('/:id')
   getSingleStudentFullDetails(
     @Param('id') id: string,
