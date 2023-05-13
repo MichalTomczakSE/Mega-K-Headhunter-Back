@@ -207,4 +207,25 @@ export class StudentService {
       status: 'changed',
     };
   }
+
+  async getScheduleStudents(hrId:string, itemsPerSite: number, pageNo: number): Promise<StudentsListResponse>{
+    const [students, count] = (await Student.findAndCount({
+      select: ['id', 'firstName', 'lastName', 'githubUsername', 'scheduledAt'],
+      where: [
+        {
+          hr:{
+            hrId
+          }
+        }
+      ],
+
+      skip: itemsPerSite * (pageNo - 1),
+      take: itemsPerSite,
+      order: {
+        scheduledAt: 'ASC',
+      },
+    })) as [StudentListItem[], number]
+    const totalPages = Math.ceil(count / itemsPerSite);
+    return {students, totalPages}
+  }
 }
