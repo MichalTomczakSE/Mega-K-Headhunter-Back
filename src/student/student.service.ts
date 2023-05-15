@@ -1,9 +1,11 @@
-import { BadRequestException, Injectable } from '@nestjs/common';
+import { BadRequestException, Inject, Injectable, NotFoundException } from '@nestjs/common';
 import { Student } from './student.entity';
 import {
   GetSingleStudentFullDetailsResponse,
   OneStudentResponse,
-  StudentStatus,
+  StudentListItem,
+  StudentsListResponse,
+  StudentStatus
 } from '../types';
 import { UpdateStudentDetailsDto } from './dto/update-student-details.dto';
 import { StudentDegrees } from './student-degrees.entity';
@@ -11,27 +13,59 @@ import { UpdateStudentDetailsResponse } from '../types/student/update-student-de
 import { HR } from '../hr/hr.entity';
 import * as moment from 'moment';
 import { ChangeStudentStatusResponse } from '../types/student/change-student-status-response';
+import { IsNull, Like } from 'typeorm';
+import { EmailService } from '../email/email.service';
+import { hireStudentMessage } from '../templates/email';
 
 @Injectable()
 export class StudentService {
+  constructor(@Inject(EmailService) private emailService: EmailService) {
+  }
+
   async getStudents(
-    status: number,
-  ): Promise<Omit<OneStudentResponse, 'degrees'>[]> {
-    return await Student.find({
-      select: {
-        id: true,
-        firstName: true,
-        lastName: true,
-        expectedTypeWork: true,
-        targetWorkCity: true,
-        expectedSalary: true,
-        canTakeApprenticeship: true,
-        workExperience: true,
+      status: number,
+      itemsPerSite: number,
+      pageNo: number,
+      city: string,
+  ): Promise<StudentsListResponse> {
+    const [students, count] = (await Student.findAndCount({
+      select: ['id', 'firstName', 'lastName', 'githubUsername', 'scheduledAt'],
+      where: [
+        {
+          status,
+          isActive: true,
+          targetWorkCity: Like(`%${String(city)}%`),
+        },
+        city === ''
+            ? {
+              status,
+              isActive: true,
+              targetWorkCity: IsNull(),
+            }
+            : null,
+      ],
+      skip: itemsPerSite * (pageNo - 1),
+      take: itemsPerSite,
+      order: {
+        scheduledAt: 'ASC',
       },
-      where: {
-        status,
-      },
-    });
+    })) as [StudentListItem[], number];
+    const totalPages = Math.ceil(count / itemsPerSite);
+
+    const censoredStudentsData = students.map(
+        ({ githubUsername, scheduledAt, lastName, ...rest }) => {
+          return {
+            ...rest,
+            lastName: `${lastName[0]}.`,
+          };
+        },
+    );
+
+    return {
+      students:
+          status === StudentStatus.available ? censoredStudentsData : students,
+      totalPages,
+    };
   }
 
   async getOneAvailableStudents(id: string): Promise<OneStudentResponse> {
@@ -42,6 +76,8 @@ export class StudentService {
         firstName: true,
         lastName: true,
         expectedTypeWork: true,
+        expectedContractType: true,
+        monthsOfCommercialExp: true,
         targetWorkCity: true,
         expectedSalary: true,
         canTakeApprenticeship: true,
@@ -67,43 +103,47 @@ export class StudentService {
   async getSingleStudentFullDetails(
     id: string,
   ): Promise<GetSingleStudentFullDetailsResponse> {
-    const student = await Student.findOneOrFail({
+    const student = await Student.findOne({
       where: {
         isActive: true,
         id,
       },
       relations: ['degrees'],
     });
-    if (student.degrees !== null) {
-      const { activationToken, id, ...rest } = student.degrees;
+    if ( !student ) {
+      throw new NotFoundException(`Student ${id} does not exist`);
+    } else if ( student.degrees !== null ) {
+      const { activationToken, id: studentId, ...rest } = student.degrees;
       (student as GetSingleStudentFullDetailsResponse).degrees = rest;
-      return student;
     }
+
+    return student;
   }
+
   async editStudentDetails(
-    id: string,
-    studentData: UpdateStudentDetailsDto,
+      id: string,
+      studentData: UpdateStudentDetailsDto,
   ): Promise<UpdateStudentDetailsResponse> {
     const student = await Student.findOneOrFail({
       where: { id },
       relations: ['degrees'],
     });
-    if (student.degrees !== null) {
-      await StudentDegrees.update(student.degrees.id, {
-        bonusProjectUrls: studentData.bonusProjectUrls,
-      });
-    }
+
     const partialStudentData = { ...studentData };
     delete partialStudentData.bonusProjectUrls;
     await Student.update(id, partialStudentData);
 
-    if (student.degrees !== null) {
+    if ( student.degrees !== null ) {
       await StudentDegrees.update(student.degrees.id, {
         bonusProjectUrls: studentData.bonusProjectUrls,
       });
     }
-    return;
+
+    return {
+      status: 'changed',
+    };
   }
+
   async scheduleStudent(
     id: string,
     hrId: string,
@@ -165,7 +205,7 @@ export class StudentService {
     student.scheduledAt = null;
     await student.save();
 
-    //@TODO sending email to admin when student was hired
+    await this.emailService.sendMail(process.env.ADMIN_EMAIL_ADDRESS, `Zatrudniono nowego kursanta [${student.id}]`, hireStudentMessage(student))
 
     return {
       status: 'changed',
