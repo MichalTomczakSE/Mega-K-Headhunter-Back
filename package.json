@@ -27,6 +27,7 @@
     "@nestjs/platform-express": "^9.0.0",
     "@nestjs/schedule": "^2.2.1",
     "@nestjs/typeorm": "^9.0.1",
+    "@supercharge/strings": "^2.0.0",
     "@types/passport-jwt": "^3.0.8",
     "@types/passport-local": "^1.0.35",
     "class-transformer": "^0.5.1",
