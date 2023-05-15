@@ -24,6 +24,7 @@ import { UpdateStudentDetailsDto } from './dto/update-student-details.dto';
 import { UpdateStudentDetailsResponse } from '../types/student/update-student-details-response';
 import { CheckUniquePropertiesGuard } from '../guards/check-unique-properties.guard';
 import { ChangeStudentStatusResponse } from '../types/student/change-student-status-response';
+import { JwtAuthGuard } from '../auth/jwt-auth.guard';
 import { CheckScheduledStudentsLimitGuard } from '../guards/check-scheduled-students-limit.guard';
 import {
   ApiAcceptedResponse,
@@ -39,6 +40,7 @@ import { Student } from '../student/student.entity';
 export class StudentController {
   constructor(@Inject(StudentService) private studentService: StudentService) {}
 
+  @UseGuards(JwtAuthGuard)
   @Get('/available-students')
   @ApiOkResponse({ description: 'List of available students', type: StudentsListResponse })
   async getAvailableStudents(
@@ -60,6 +62,7 @@ export class StudentController {
     );
   }
 
+  @UseGuards(JwtAuthGuard)
   @Get('/available-students/:id')
   @ApiOkResponse({ description: 'One available student', type: OneStudentResponse,})
   async getOneAvailableStudent(

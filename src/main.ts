@@ -22,7 +22,7 @@ async function bootstrap() {
         }),
     );
     app.useGlobalInterceptors(new TimeoutInterceptor());
-
+  app.enableCors();
   await app.listen(3000);
 }
 bootstrap();

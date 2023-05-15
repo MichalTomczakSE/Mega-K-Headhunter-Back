@@ -168,6 +168,7 @@ export class OneStudentResponse {
     nullable: true,
   })
   workExperience: string | null;
+  
   @ApiProperty({
     description: 'Degrees',
     type: [StudentListItem],
@@ -181,5 +182,7 @@ export class OneStudentResponse {
       },
     ],
   })
+  expectedContractType: number;
+  monthsOfCommercialExp: number;
   degrees: Omit<StudentDegreesEntity, 'id' | 'activationToken'>;
 }
