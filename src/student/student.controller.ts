@@ -26,13 +26,23 @@ import { CheckUniquePropertiesGuard } from '../guards/check-unique-properties.gu
 import { ChangeStudentStatusResponse } from '../types/student/change-student-status-response';
 import { JwtAuthGuard } from '../auth/jwt-auth.guard';
 import { CheckScheduledStudentsLimitGuard } from '../guards/check-scheduled-students-limit.guard';
-
+import {
+  ApiAcceptedResponse,
+  ApiBadRequestResponse,
+  ApiCreatedResponse,
+  ApiNotFoundResponse,
+  ApiOkResponse, ApiQuery,
+  ApiTags
+} from "@nestjs/swagger";
+import { Student } from '../student/student.entity';
+@ApiTags('Student')
 @Controller('student')
 export class StudentController {
   constructor(@Inject(StudentService) private studentService: StudentService) {}
 
   @UseGuards(JwtAuthGuard)
   @Get('/available-students')
+  @ApiOkResponse({ description: 'List of available students', type: StudentsListResponse })
   async getAvailableStudents(
       @Query(
           'itemsPerSite',
@@ -54,6 +64,7 @@ export class StudentController {
 
   @UseGuards(JwtAuthGuard)
   @Get('/available-students/:id')
+  @ApiOkResponse({ description: 'One available student', type: OneStudentResponse,})
   async getOneAvailableStudent(
     @Param('id') id: string,
   ): Promise<OneStudentResponse> {
@@ -61,6 +72,13 @@ export class StudentController {
   }
 
   @Put('/schedule/:studentId')
+  @ApiCreatedResponse({ description: 'Schedule student by Id',type:UpdateStudentDetailsResponse })
+  @ApiBadRequestResponse({
+    description: 'Only available student may be scheduled',
+  })
+  @ApiNotFoundResponse({
+    description: 'Not found',
+  })
   @UseGuards(CheckScheduledStudentsLimitGuard)
   async scheduleStudent(
     @Param('studentId', ParseUUIDPipe) studentId: string,
@@ -70,6 +88,11 @@ export class StudentController {
   }
 
   @Put('/reject/:studentId')
+  @ApiOkResponse({ description: 'Reject student by Id', type:UpdateStudentDetailsResponse  })
+  @ApiOkResponse({ status: 200, description: 'OK' })
+  @ApiBadRequestResponse({
+    description: 'Only a scheduled student may be rejected',
+  })
   async rejectStudent(
       @Param('studentId', ParseUUIDPipe) studentId: string,
   ): Promise<ChangeStudentStatusResponse> {
@@ -77,6 +100,7 @@ export class StudentController {
   }
 
   @Get('/awaiting-students')
+  @ApiOkResponse({ description: 'Awaiting students list', type: StudentsListResponse })
   async getAwaitingStudents(
       @Query(
           'itemsPerSite',
@@ -97,6 +121,7 @@ export class StudentController {
   }
 
   @Get('/hired-students')
+  @ApiOkResponse({ description: 'Hired students list', type: StudentsListResponse })
   async getHiredStudents(
       @Query(
           'itemsPerSite',
@@ -117,6 +142,10 @@ export class StudentController {
   }
 
   @Put('/hire/:studentId')
+  @ApiCreatedResponse({ description: 'Hire student', type:UpdateStudentDetailsResponse })
+  @ApiBadRequestResponse({
+    description: 'Only a scheduled student may be rejected',
+  })
   async hireStudent(
     @Param('studentId', ParseUUIDPipe) studentId: string,
   ): Promise<ChangeStudentStatusResponse> {
@@ -124,6 +153,7 @@ export class StudentController {
   }
 
   @Get('/:id')
+  @ApiOkResponse({ description: 'Single student', type: Student })
   getSingleStudentFullDetails(
     @Param('id') id: string,
   ): Promise<GetSingleStudentFullDetailsResponse> {
@@ -131,6 +161,7 @@ export class StudentController {
   }
 
   @Put('/:id')
+  @ApiCreatedResponse({ description: 'Update student', type:UpdateStudentDetailsResponse })
   @UseGuards(CheckUniquePropertiesGuard)
   editStudentDetails(
     @Param('id', ParseUUIDPipe) id: string,

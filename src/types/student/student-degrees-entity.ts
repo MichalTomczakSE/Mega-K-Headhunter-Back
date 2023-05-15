@@ -1,6 +1,6 @@
 export type GradingScale = 0 | 1 | 2 | 3 | 4 | 5;
 
-export interface StudentDegreesEntity {
+export class StudentDegreesEntity {
   id: string;
   email: string;
   courseCompletion: GradingScale;
