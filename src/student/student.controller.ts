@@ -24,12 +24,14 @@ import { UpdateStudentDetailsDto } from './dto/update-student-details.dto';
 import { UpdateStudentDetailsResponse } from '../types/student/update-student-details-response';
 import { CheckUniquePropertiesGuard } from '../guards/check-unique-properties.guard';
 import { ChangeStudentStatusResponse } from '../types/student/change-student-status-response';
+import { JwtAuthGuard } from '../auth/jwt-auth.guard';
 import { CheckScheduledStudentsLimitGuard } from '../guards/check-scheduled-students-limit.guard';
 
 @Controller('student')
 export class StudentController {
   constructor(@Inject(StudentService) private studentService: StudentService) {}
 
+  @UseGuards(JwtAuthGuard)
   @Get('/available-students')
   async getAvailableStudents(
       @Query(
@@ -50,6 +52,7 @@ export class StudentController {
     );
   }
 
+  @UseGuards(JwtAuthGuard)
   @Get('/available-students/:id')
   async getOneAvailableStudent(
     @Param('id') id: string,
