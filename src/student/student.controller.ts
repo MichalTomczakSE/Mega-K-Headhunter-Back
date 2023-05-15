@@ -1,24 +1,31 @@
 import {
   Body,
   Controller,
+  DefaultValuePipe,
   Get,
   Inject,
   Param,
-  Put,
+  ParseEnumPipe,
+  ParseIntPipe,
   ParseUUIDPipe,
+  Put,
+  Query,
   UseGuards,
 } from '@nestjs/common';
 import { StudentService } from './student.service';
 import {
   GetSingleStudentFullDetailsResponse,
+  ItemsPerSite,
   OneStudentResponse,
-  StudentStatus,
+  StudentsListResponse,
+  StudentStatus
 } from '../types';
 import { UpdateStudentDetailsDto } from './dto/update-student-details.dto';
 import { UpdateStudentDetailsResponse } from '../types/student/update-student-details-response';
 import { CheckUniquePropertiesGuard } from '../guards/check-unique-properties.guard';
 import { ChangeStudentStatusResponse } from '../types/student/change-student-status-response';
 import { JwtAuthGuard } from '../auth/jwt-auth.guard';
+import { CheckScheduledStudentsLimitGuard } from '../guards/check-scheduled-students-limit.guard';
 
 @Controller('student')
 export class StudentController {
@@ -26,8 +33,23 @@ export class StudentController {
 
   @UseGuards(JwtAuthGuard)
   @Get('/available-students')
-  async getAvailableStudents(): Promise<Omit<OneStudentResponse, 'degrees'>[]> {
-    return await this.studentService.getStudents(StudentStatus.available);
+  async getAvailableStudents(
+      @Query(
+          'itemsPerSite',
+          new DefaultValuePipe(10),
+          ParseIntPipe,
+          new ParseEnumPipe(ItemsPerSite),
+      )
+          itemsPerSite: ItemsPerSite,
+      @Query('pageNo', new DefaultValuePipe(1), ParseIntPipe) pageNO: number,
+      @Query('city', new DefaultValuePipe('')) city: string,
+  ): Promise<StudentsListResponse> {
+    return await this.studentService.getStudents(
+        StudentStatus.available,
+        itemsPerSite,
+        pageNO,
+        city,
+    );
   }
 
   @UseGuards(JwtAuthGuard)
@@ -39,6 +61,7 @@ export class StudentController {
   }
 
   @Put('/schedule/:studentId')
+  @UseGuards(CheckScheduledStudentsLimitGuard)
   async scheduleStudent(
     @Param('studentId', ParseUUIDPipe) studentId: string,
     @Body('hrId') hrId: string,
@@ -48,19 +71,49 @@ export class StudentController {
 
   @Put('/reject/:studentId')
   async rejectStudent(
-    @Param('studentId', ParseUUIDPipe) studentId: string,
+      @Param('studentId', ParseUUIDPipe) studentId: string,
   ): Promise<ChangeStudentStatusResponse> {
     return this.studentService.rejectStudent(studentId);
   }
 
   @Get('/awaiting-students')
-  async getAwaitingStudents(): Promise<Omit<OneStudentResponse, 'degrees'>[]> {
-    return await this.studentService.getStudents(StudentStatus.awaiting);
+  async getAwaitingStudents(
+      @Query(
+          'itemsPerSite',
+          new DefaultValuePipe(10),
+          ParseIntPipe,
+          new ParseEnumPipe(ItemsPerSite),
+      )
+          itemsPerSite: ItemsPerSite,
+      @Query('pageNo', new DefaultValuePipe(1), ParseIntPipe) pageNO: number,
+      @Query('city', new DefaultValuePipe('')) city: string,
+  ): Promise<StudentsListResponse> {
+    return await this.studentService.getStudents(
+        StudentStatus.awaiting,
+        itemsPerSite,
+        pageNO,
+        city,
+    );
   }
 
   @Get('/hired-students')
-  async getHiredStudents(): Promise<Omit<OneStudentResponse, 'degrees'>[]> {
-    return await this.studentService.getStudents(StudentStatus.hired);
+  async getHiredStudents(
+      @Query(
+          'itemsPerSite',
+          new DefaultValuePipe(10),
+          ParseIntPipe,
+          new ParseEnumPipe(ItemsPerSite),
+      )
+          itemsPerSite: ItemsPerSite,
+      @Query('pageNo', new DefaultValuePipe(1), ParseIntPipe) pageNO: number,
+      @Query('city') city: string,
+  ): Promise<StudentsListResponse> {
+    return await this.studentService.getStudents(
+        StudentStatus.hired,
+        itemsPerSite,
+        pageNO,
+        city,
+    );
   }
 
   @Put('/hire/:studentId')
