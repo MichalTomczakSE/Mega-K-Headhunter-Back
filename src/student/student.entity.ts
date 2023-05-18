@@ -1,4 +1,13 @@
-import { BaseEntity, Column, Entity, Index, JoinColumn, ManyToOne, OneToOne, PrimaryGeneratedColumn, } from 'typeorm';
+import {
+  BaseEntity,
+  Column,
+  Entity,
+  Index,
+  JoinColumn,
+  ManyToOne,
+  OneToOne,
+  PrimaryGeneratedColumn,
+} from 'typeorm';
 import { StudentEntity } from '../types';
 import { StudentDegrees } from './student-degrees.entity';
 import { HR } from '../hr/hr.entity';
@@ -34,6 +43,7 @@ export class Student extends BaseEntity implements StudentEntity {
   @Column({
     unique: true,
     length: 50,
+    nullable: true,
   })
   githubUsername: string;
 
@@ -129,7 +139,7 @@ export class Student extends BaseEntity implements StudentEntity {
   @JoinColumn()
   degrees: StudentDegrees;
 
-  @ManyToOne(() => HR, (hr) => hr.students)
+  @ManyToOne(() => HR, (hr) => hr.students, { nullable: true })
   hr: HR;
 
   @JoinColumn({ name: 'email', referencedColumnName: 'email' })

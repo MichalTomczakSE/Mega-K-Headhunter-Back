@@ -2,10 +2,12 @@ import {
   BaseEntity,
   Column,
   Entity,
+  JoinColumn,
   OneToMany,
   PrimaryGeneratedColumn,
 } from 'typeorm';
 import { Student } from '../student/student.entity';
+import { User } from '../user/user.entity';
 
 @Entity()
 export class HR extends BaseEntity {
@@ -33,6 +35,9 @@ export class HR extends BaseEntity {
     zerofill: false,
   })
   maxReservedStudents: number;
+
+  @JoinColumn({ name: 'email', referencedColumnName: 'email' })
+  user: User;
 
   @OneToMany(() => Student, (student) => student.hr)
   students: Student[];

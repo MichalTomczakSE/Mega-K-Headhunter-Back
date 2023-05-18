@@ -1,13 +1,14 @@
 import {
   BaseEntity,
   Column,
-  Entity,
+  Entity, Index,
   JoinColumn,
   OneToOne,
-  PrimaryGeneratedColumn,
-} from 'typeorm';
+  PrimaryGeneratedColumn
+} from "typeorm";
 import { UserEntity, UserRole } from '../types';
 import { Student } from '../student/student.entity';
+import { HR } from "../hr/hr.entity";
 
 @Entity()
 export class User extends BaseEntity implements UserEntity {
@@ -26,12 +27,16 @@ export class User extends BaseEntity implements UserEntity {
   role: UserRole;
 
   @Column({
-    unique: true,
     length: 100,
+
   })
   email: string;
 
-  @OneToOne((type) => Student)
+  @OneToOne(() => Student, { nullable: true })
   @JoinColumn({ name: 'email', referencedColumnName: 'email' })
   student: Student;
+
+  @OneToOne(() => HR, { nullable:true })
+  @JoinColumn({ name: 'email', referencedColumnName: 'email' })
+  hr: HR;
 }
